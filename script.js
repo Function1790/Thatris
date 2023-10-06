@@ -7,13 +7,13 @@ const MapYLength = 20
 const BlockSize = 38
 
 var GameTick = 0
-var GravityTick = 30
+var GravityTick = 20
 var StopingTick = 0
 var MaxStopTick = 100
 
 const metrixType = [
     { //I
-        'color': 'rgb(29, 208, 255)',
+        'color': 'rgb(39, 179, 255)',
         'metrix': [
             [1, 0, 0, 0],
             [1, 0, 0, 0],
@@ -31,7 +31,7 @@ const metrixType = [
         ]
     },
     { //T
-        'color': 'rgb(255, 120, 244)',
+        'color': 'rgb(230, 111, 220)',
         'metrix': [
             [0, 1, 0, 0],
             [1, 1, 0, 0],
@@ -40,7 +40,7 @@ const metrixType = [
         ]
     },
     { //O
-        'color': 'rgb(241, 255, 46)',
+        'color': 'rgb(255, 231, 44)',
         'metrix': [
             [1, 1, 0, 0],
             [1, 1, 0, 0],
@@ -49,7 +49,7 @@ const metrixType = [
         ]
     },
     { //J
-        'color': 'rgb(4, 85, 252)',
+        'color': 'rgb(67, 80, 235)',
         'metrix': [
             [0, 1, 0, 0],
             [0, 1, 0, 0],
@@ -58,7 +58,7 @@ const metrixType = [
         ]
     },
     { //S
-        'color': 'rgb(29, 255, 47)',
+        'color': 'rgb(41, 240, 55)',
         'metrix': [
             [0, 1, 1, 0],
             [1, 1, 0, 0],
@@ -81,14 +81,11 @@ const metrixType = [
 class Cursor {
     constructor(x, y = -4) {
         this.pos = [x, y]
-        this.metrix = [
-            [0, 1, 1, 0],
-            [0, 0, 1, 1],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
-        ]
+        const mertix_n = Math.floor(Math.random() * 7)
+        this.metrix = copyMetrix(metrixType[mertix_n].metrix)
+        this.color = metrixType[mertix_n].color
         this.processEdge()
-        this.color = 'rgb(225,75,85)'
+        this.pos[0] = 4 - this.startEdge[0]
     }
     processEdge() {
         this.startEdge = [null, null]
@@ -212,7 +209,15 @@ function moveHorizontal(dx) {
     cursor.pos[0] += dx
 }
 
-function copyMetrix() {
+function copyMetrix(metrix) {
+    var result = []
+    for (var i = 0; i < metrix.length; i++) {
+        result.push([])
+        for (var j = 0; j < metrix[i].length; j++) {
+            result[i].push(metrix[i][j])
+        }
+    }
+    return result
 }
 
 //Event Function
