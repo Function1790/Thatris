@@ -15,74 +15,147 @@ const metrixType = [
     { //I
         'color': 'rgb(39, 179, 255)',
         'metrix': [
-            [1, 0, 0, 0],
-            [1, 0, 0, 0],
-            [1, 0, 0, 0],
-            [1, 0, 0, 0],
+            [
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+            ], [
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ]
         ]
     },
     { //L
         'color': 'rgb(254, 168, 38)',
         'metrix': [
-            [1, 0, 0, 0],
-            [1, 0, 0, 0],
-            [1, 1, 0, 0],
-            [0, 0, 0, 0],
+            [
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 1, 1],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 0, 1],
+                [0, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 1, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 0, 0],
+                [0, 1, 1, 1],
+                [0, 1, 0, 0],
+                [0, 0, 0, 0],
+            ],
         ]
     },
     { //T
         'color': 'rgb(230, 111, 220)',
         'metrix': [
-            [0, 1, 0, 0],
-            [1, 1, 0, 0],
-            [0, 1, 0, 0],
-            [0, 0, 0, 0],
+            [
+                [0, 0, 1, 0],
+                [0, 1, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 0, 0],
+                [0, 1, 1, 1],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 1, 0],
+                [0, 0, 1, 1],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 1, 0],
+                [0, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ]
         ]
     },
     { //O
         'color': 'rgb(255, 231, 44)',
-        'metrix': [
-            [1, 1, 0, 0],
-            [1, 1, 0, 0],
+        'metrix': [[
             [0, 0, 0, 0],
+            [0, 1, 1, 0],
+            [0, 1, 1, 0],
             [0, 0, 0, 0],
-        ]
+        ]]
     },
     { //J
         'color': 'rgb(67, 80, 235)',
         'metrix': [
-            [0, 1, 0, 0],
-            [0, 1, 0, 0],
-            [1, 1, 0, 0],
-            [0, 0, 0, 0],
+            [
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 0, 0],
+                [0, 1, 1, 1],
+                [0, 0, 0, 1],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 1, 1],
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 1, 0, 0],
+                [0, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ]
+
         ]
     },
     { //S
         'color': 'rgb(41, 240, 55)',
         'metrix': [
-            [0, 1, 1, 0],
-            [1, 1, 0, 0],
-            [0, 0, 0, 0],
-            [0, 0, 0, 0],
+            [
+                [0, 0, 0, 0],
+                [0, 0, 1, 1],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ], [
+                [0, 0, 1, 0],
+                [0, 0, 1, 1],
+                [0, 0, 0, 1],
+                [0, 0, 0, 0],
+            ]
         ]
     },
     { //Z
         'color': 'rgb(237, 77, 77)',
-        'metrix': [
-            [1, 1, 0, 0],
+        'metrix': [[
+            [0, 0, 0, 0],
             [0, 1, 1, 0],
+            [0, 0, 1, 1],
             [0, 0, 0, 0],
+        ], [
+            [0, 0, 0, 1],
+            [0, 0, 1, 1],
+            [0, 0, 1, 0],
             [0, 0, 0, 0],
-        ]
+        ]]
     },
 ]
 
 //Class
 class Cursor {
-    constructor(x, y = -4) {
+    constructor(x, y = 4) {
         this.pos = [x, y]
-        const mertix_n = Math.floor(Math.random() * 7)
-        this.metrix = copyMetrix(metrixType[mertix_n].metrix)
+        const mertix_n = 6//Math.floor(Math.random() * 7)
+        this.mertixIndex = mertix_n
+        this.rotateIndex = 0
+        this.metrix = copyMetrix(metrixType[mertix_n].metrix[this.rotateIndex])
         this.color = metrixType[mertix_n].color
         this.processEdge()
         this.pos[0] = 4 - this.startEdge[0]
@@ -124,7 +197,8 @@ class Cursor {
         }
     }
     applyGravity() {
-        if (this.isCrash(0, 1)) {
+        return
+        if (this.isCrashOnMove(0, 1)) {
             StopingTick++
             return
         }
@@ -137,7 +211,7 @@ class Cursor {
             StopingTick++
         }
     }
-    isCrash(dx, dy) {
+    isCrashOnMove(dx, dy) {
         const x = this.pos[0] + dx
         const y = this.pos[1] + dy
         for (var i = 0; i < 4; i++) {
@@ -152,6 +226,50 @@ class Cursor {
             }
         }
         return false
+    }
+    isCrashOnTurn(turnedMetrix) {
+        const x = this.pos[0]
+        const y = this.pos[1]
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                try {
+                    if (turnedMetrix[i][j] + map[y + i][x + j].value > 2) {
+                        return true
+                    }
+                } catch (err) {
+                    continue
+                }
+            }
+        }
+        return false
+    }
+    // direction : 1 -> Right, -1 -> Left
+    turnMetrix(turnDeltaIndex) {
+        var turned = this.turnIndex + turnDeltaIndex
+        if (turned == -1) {
+            turned = 3
+        }
+        else if (turned == 4) {
+
+        }
+
+
+        if (this.isCrashOnTurn(turnedMetrix)) {
+            return
+        }
+
+        this.metrix = turnedMetrix
+    }
+    rotateMetrix(direction) {
+        var n = this.mertixIndex
+        this.rotateIndex += direction
+        if (this.rotateIndex >= metrixType[n].metrix.length) {
+            this.rotateIndex = 0
+        } else if (this.rotateIndex < 0) {
+            this.rotateIndex = metrixType[n].metrix.length - 1
+        }
+        print(this.rotateIndex)
+        this.metrix = copyMetrix(metrixType[n].metrix[this.rotateIndex])
     }
 }
 
@@ -199,7 +317,7 @@ function hardenCursor() {
 }
 
 function moveHorizontal(dx) {
-    if (cursor.isCrash(dx, 0)) {
+    if (cursor.isCrashOnMove(dx, 0)) {
         return
     }
     const nextX = cursor.pos[0] + dx
@@ -223,12 +341,19 @@ function copyMetrix(metrix) {
 //Event Function
 document.addEventListener('keypress', (ev) => {
     //print(ev)
+    // keyUp -> turn Right
     switch (ev.code) {
         case 'KeyA':
             moveHorizontal(-1)
             break
         case 'KeyD':
             moveHorizontal(1)
+            break
+        case 'KeyW':
+            cursor.rotateMetrix(1)
+            break
+        case 'KeyS':
+            cursor.rotateMetrix(-1)
             break
     }
 })
