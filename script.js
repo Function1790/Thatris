@@ -152,7 +152,7 @@ const metrixType = [
 class Cursor {
     constructor(x, y = 4) {
         this.pos = [x, y]
-        const mertix_n = 6//Math.floor(Math.random() * 7)
+        const mertix_n = Math.floor(Math.random() * 7)
         this.mertixIndex = mertix_n
         this.rotateIndex = 0
         this.metrix = copyMetrix(metrixType[mertix_n].metrix[this.rotateIndex])
@@ -197,7 +197,6 @@ class Cursor {
         }
     }
     applyGravity() {
-        return
         if (this.isCrashOnMove(0, 1)) {
             StopingTick++
             return
@@ -243,39 +242,21 @@ class Cursor {
         }
         return false
     }
-    // direction : 1 -> Right, -1 -> Left
-    turnMetrix(turnDeltaIndex) {
-        var turned = this.turnIndex + turnDeltaIndex
-        if (turned == -1) {
-            turned = 3
-        }
-        else if (turned == 4) {
-
-        }
-
-
-        if (this.isCrashOnTurn(turnedMetrix)) {
-            return
-        }
-
-        this.metrix = turnedMetrix
-    }
     rotateMetrix(direction) {
         var n = this.mertixIndex
-        this.rotateIndex += direction
-        if (this.rotateIndex >= metrixType[n].metrix.length) {
-            this.rotateIndex = 0
-        } else if (this.rotateIndex < 0) {
-            this.rotateIndex = metrixType[n].metrix.length - 1
+        var nextIndex = correctRotateIndex(n, this.rotateIndex + direction)
+        if(this.isCrashOnTurn(metrixType[n].metrix[nextIndex])){
+            return
         }
-        print(this.rotateIndex)
+        this.rotateIndex = nextIndex
         this.metrix = copyMetrix(metrixType[n].metrix[this.rotateIndex])
+        this.processEdge()
     }
 }
 
 class Block {
     constructor(x, y) {
-        this.pos = [x, y]
+        this.pos = [x * BlockSize, y * BlockSize]
         this.value = 0
         this.color = 'gray'
     }
@@ -283,6 +264,7 @@ class Block {
         const x = this.pos[0]
         const y = this.pos[1]
         ctx.beginPath()
+
         if (this.value == 2) {
             ctx.fillStyle = this.color
             ctx.fillRect(x, y, BlockSize, BlockSize)
@@ -296,11 +278,46 @@ class Block {
         this.value = value
         this.color = color
     }
+    updateY(y) {
+        this.pos[1] = y * BlockSize
+    }
 }
 
 
 //Function
 const print = (data) => { console.log(data) }
+
+function correctRotateIndex(n, rotateIndex){
+    if (rotateIndex >= metrixType[n].metrix.length) {
+        return 0
+    } else if (rotateIndex < 0) {
+        return metrixType[n].metrix.length - 1
+    }
+    return rotateIndex
+}
+
+function destroyLine(y) {
+    for (var i = 0; i < y; i++) {
+        for (var x in map[i]) {
+            map[i][x].updateY(i + 1)
+        }
+    }
+    map.pop(y)
+    var emptyLine = []
+    for (var i = 0; i < MapXLength; i++) {
+        emptyLine.push(new Block(i, 0))
+    }
+    map.unshift(emptyLine)
+}
+
+function isStackedLine(y) {
+    for (var x in map[y]) {
+        if (map[y][x].value == 0) {
+            return false
+        }
+    }
+    return true
+}
 
 function hardenCursor() {
     for (var i = 0; i < 4; i++) {
@@ -312,6 +329,18 @@ function hardenCursor() {
             }
         }
     }
+
+    for (var i = 0; i < 4; i++) {
+        var y = cursor.pos[1] + i
+        if (y >= MapYLength || y < 0) {
+            continue
+        }
+
+        if (isStackedLine(y)) {
+            destroyLine(y)
+        }
+    }
+
     const lastX = cursor.pos[0]
     cursor = new Cursor(lastX)
 }
@@ -364,8 +393,7 @@ var cursor = new Cursor(0)
 for (var i = 0; i < MapYLength; i++) {
     map.push([])
     for (var j = 0; j < MapXLength; j++) {
-        var pos = [j * (BlockSize), i * (BlockSize)]
-        map[i].push(new Block(pos[0], pos[1]))
+        map[i].push(new Block(j, i))
     }
 }
 
@@ -379,11 +407,11 @@ function render() {
 
     cursor.draw()
 
-
     cursor.applyGravity()
     if (StopingTick == MaxStopTick) {
         hardenCursor()
     }
+
     GameTick++
     requestAnimationFrame(render)
 }
