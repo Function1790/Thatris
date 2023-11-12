@@ -1,6 +1,10 @@
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
 
+const canvas2 = document.getElementById("data")
+const ctx2 = canvas2.getContext("2d")
+
+
 const map = []
 const MapXLength = 10
 const MapYLength = 20
@@ -152,7 +156,7 @@ const metrixType = [
 class Cursor {
     constructor(x, y = 4) {
         this.pos = [x, y]
-        const mertix_n = Math.floor(Math.random() * 7)
+        const mertix_n = 0//Math.floor(Math.random() * 7)
         this.mertixIndex = mertix_n
         this.rotateIndex = 0
         this.metrix = copyMetrix(metrixType[mertix_n].metrix[this.rotateIndex])
@@ -220,6 +224,9 @@ class Cursor {
                         return true
                     }
                 } catch (err) {
+                    if(this.metrix[i][j]==1){
+                        return false
+                    }
                     continue
                 }
             }
@@ -232,22 +239,41 @@ class Cursor {
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
                 try {
+                    
                     if (turnedMetrix[i][j] + map[y + i][x + j].value > 2) {
-                        return true
+                        return [true]
                     }
                 } catch (err) {
-                    continue
+                    if (!this.isCrashOnMove(0, -1)) {
+                        print("Good")
+                        return [false, [0, -1]]
+                    }
+                    if (!this.isCrashOnMove(1, 0)) {
+                        return [false, [1, 0]]
+                    }
+                    if (!this.isCrashOnMove(-1, 0)) {
+                        return [false, [-1, 0]]
+                    }
+                    if (this.mertixIndex == 0) {
+                        if (!this.isCrashOnMove(0, -2)) {
+                            return [false, [0, -2]]
+                        }
+                    }
+                    return [true]
                 }
             }
         }
-        return false
+        return [false, [0, 0]]
     }
     rotateMetrix(direction) {
         var n = this.mertixIndex
         var nextIndex = correctRotateIndex(n, this.rotateIndex + direction)
-        if(this.isCrashOnTurn(metrixType[n].metrix[nextIndex])){
+        const result = this.isCrashOnTurn(metrixType[n].metrix[nextIndex])
+        if (result[0]) {
             return
         }
+        this.pos[0] += result[1][0]
+        this.pos[1] += result[1][1]
         this.rotateIndex = nextIndex
         this.metrix = copyMetrix(metrixType[n].metrix[this.rotateIndex])
         this.processEdge()
@@ -287,7 +313,7 @@ class Block {
 //Function
 const print = (data) => { console.log(data) }
 
-function correctRotateIndex(n, rotateIndex){
+function correctRotateIndex(n, rotateIndex) {
     if (rotateIndex >= metrixType[n].metrix.length) {
         return 0
     } else if (rotateIndex < 0) {
@@ -397,6 +423,13 @@ for (var i = 0; i < MapYLength; i++) {
     }
 }
 
+function render2(){
+    ctx2.beginPath()
+    ctx2.strokeStyle="solid"
+    ctx2.strokeRect(0,0,200,200)
+    ctx2.closePath()
+}
+
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     for (var i = 0; i < MapYLength; i++) {
@@ -413,6 +446,7 @@ function render() {
     }
 
     GameTick++
+    render2()
     requestAnimationFrame(render)
 }
 

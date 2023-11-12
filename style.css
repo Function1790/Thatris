@@ -1,13 +1,31 @@
+* {
+    box-sizing: border-box;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
 
 body {
     background-color: rgb(13, 13, 15);
+    height: 100%;
 }
 
-.gameWrap{
+.content {
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-content: center;
+    flex-direction: row;
 }
 
-canvas {
+.gameWrap {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-right: 30px;
+}
+
+.dataWrap{
+    display: flex;
+    flex-direction: column;
 }
